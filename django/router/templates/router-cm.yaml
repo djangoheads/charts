@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.names.fullname" . }}-nginx-conf-d
+data:
+  nginx.conf: |-
+{{ .Files.Get .Values.nginxConfFile | indent 4}}
+{{- if .Values.redirectMapFile }}
+  redirects.map: |-
+{{ .Files.Get .Values.redirectMapFile | indent 4}}
+{{- end }}

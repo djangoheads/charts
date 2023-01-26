@@ -1,0 +1,17 @@
+name: main
+version: 1.0.0
+apiVersion: v2
+dependencies:
+  - name: common
+    version: 2.2.1
+    repository: https://charts.bitnami.com/bitnami
+  - name: django-helm
+    version: 1.0.0
+    alias: app
+    condition: app.enabled
+    repository: file://../django-helm
+  - name: router
+    version: 1.0.0
+    alias: app-router
+    condition: app.enabled
+    repository: file://../router
