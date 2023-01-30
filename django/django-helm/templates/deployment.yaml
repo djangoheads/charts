@@ -1,0 +1,77 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      service: {{ include "common.names.fullname" . }}-deployment
+  template:
+    metadata:
+      labels:
+        service: {{ include "common.names.fullname" . }}-deployment
+      {{- with .Values.podLabels }}
+      {{ toYaml .| indent 2 }}
+      {{- end }}
+      annotations:
+    spec:
+      {{- include "django-helm.imagePullSecrets" . | indent 6 }}
+      containers:
+        - name: {{ include "common.names.fullname" . }}-container
+          env:
+          {{- if .Values.config }}
+          {{- range $k, $v := .Values.config }}
+          - name: {{ $k }}
+            value: {{ if typeIs "string" $v }}{{ tpl $v $ | quote }}{{ else }}{{ tpl ($v | toYaml) $ | quote }}{{ end }}
+          {{- end }}
+          {{- end }}
+          image: {{ template "django-helm.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- if .Values.command }}
+          command:
+{{ toYaml .Values.command | indent 12 }}
+{{- end }}
+{{- if .Values.args }}
+          args:
+{{ toYaml .Values.args | indent 12 }}
+{{- end }}
+          ports:
+            {{- if .Values.containerPort }}
+            - containerPort: {{ .Values.containerPort }}
+              protocol: TCP
+            {{- end }}
+          {{- if .Values.enableLivenessProbe }}
+          {{- end }}
+          envFrom:
+{{- with .Values.envs }}
+{{ toYaml .| indent 12 }}
+{{- end }}
+          volumeMounts:
+{{ if .Values.volumeMounts -}}
+{{ toYaml .Values.volumeMounts | trim | indent 12 }}
+{{- end }}
+          resources:
+{{ toYaml .Values.resources | trim | indent 12 }}
+      restartPolicy: Always
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecrets | quote }}
+{{- end }}
+      volumes:
+{{ if .Values.volumes -}}
+{{ toYaml .Values.volumes | trim | indent 8 }}
+{{- end }}
+

@@ -1,0 +1,40 @@
+{{- if .Values.migrations.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.names.fullname" . }}-migrations
+  labels:
+    service: {{ include "common.names.fullname" . }}-job
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: {{ include "common.names.fullname" . }}-migrations
+      labels:
+        service: {{ include "common.names.fullname" . }}-job
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: db-migrations
+        env:
+        {{- if .Values.config }}
+        {{- range $k, $v := .Values.config }}
+        - name: {{ $k }}
+          value: {{ if typeIs "string" $v }}{{ tpl $v $ | quote }}{{ else }}{{ tpl ($v | toYaml) $ | quote }}{{ end }}
+        {{- end }}
+        {{- end }}
+        image: {{ template "django-helm.image" . }}
+        imagePullPolicy: Always
+{{- if .Values.migration }}
+        args:
+{{ toYaml .Values.migration | indent 12 }}
+{{- end }}
+        envFrom:
+{{- with .Values.envs }}
+{{ toYaml .| indent 10 }}
+{{- end }}
+{{- end }}

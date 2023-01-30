@@ -1,0 +1,24 @@
+{{- if .Values.servicePort }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.names.fullname" . }}
+{{- if .Values.serviceAnnotations }}
+  annotations:
+{{ toYaml .Values.serviceAnnotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.serviceType | quote }}
+  {{- if .Values.serviceLoadBalancerIP }}
+  loadBalancerIP: {{ .Values.serviceLoadBalancerIP | quote }}
+  {{- end }}
+{{- if .Values.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.loadBalancerSourceRanges | indent 4 }}
+{{- end }}
+  ports:
+  - port: {{ .Values.servicePort }}
+    targetPort: {{ .Values.containerPort }}
+  selector:
+    service: {{ include "common.names.fullname" . }}-deployment
+{{- end }}
