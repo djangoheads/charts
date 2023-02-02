@@ -3,3 +3,7 @@ name: django-helm
 version: 1.0.0
 appVersion: 0.0.1
 description: default Chart
+dependencies:
+  - name: common
+    version: 2.2.1
+    repository: https://charts.bitnami.com/bitnami

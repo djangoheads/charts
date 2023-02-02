@@ -1,0 +1,10 @@
+# -- App Router values --
+enabled: true
+serviceAnnotations:
+
+servicePort: 80
+containerPort: 80
+serviceType: LoadBalancer
+
+nginxConfFile: "nginx/app-nginx.conf"
+
