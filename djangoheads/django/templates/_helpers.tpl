@@ -4,42 +4,42 @@
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "django-helm.postgresql.fullname" -}}
+{{- define "django.postgresql.fullname" -}}
 {{- include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $) -}}
 {{- end -}}
 
 {{/*
 Return the proper Odoo image name
 */}}
-{{- define "django-helm.image" -}}
+{{- define "django.image" -}}
 {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper Docker Image Registry Secret Names
 */}}
-{{- define "django-helm.imagePullSecrets" -}}
+{{- define "django.imagePullSecrets" -}}
 {{ include "common.images.pullSecrets" (dict "images" (list .Values.image) "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the Postgresql hostname
 */}}
-{{- define "django-helm.databaseHost" -}}
-{{- ternary (include "django-helm.postgresql.fullname" .) .Values.externalDatabase.host .Values.postgresql.enabled | quote -}}
+{{- define "django.databaseHost" -}}
+{{- ternary (include "django.postgresql.fullname" .) .Values.externalDatabase.host .Values.postgresql.enabled | quote -}}
 {{- end -}}
 
 {{/*
 Return the Postgresql port
 */}}
-{{- define "django-helm.databasePort" -}}
+{{- define "django.databasePort" -}}
 {{- ternary "5432" .Values.externalDatabase.port .Values.postgresql.enabled | quote -}}
 {{- end -}}
 
 {{/*
 Return the Postgresql database name
 */}}
-{{- define "django-helm.databaseName" -}}
+{{- define "django.databaseName" -}}
 {{- if .Values.postgresql.enabled }}
     {{- if .Values.global.postgresql }}
         {{- if .Values.global.postgresql.auth }}
@@ -58,7 +58,7 @@ Return the Postgresql database name
 {{/*
 Return the Postgresql user
 */}}
-{{- define "django-helm.databaseUser" -}}
+{{- define "django.databaseUser" -}}
 {{- if .Values.postgresql.enabled }}
     {{- if .Values.global.postgresql }}
         {{- if .Values.global.postgresql.auth }}
@@ -77,20 +77,20 @@ Return the Postgresql user
 {{/*
 Return the PostgreSQL Secret Name
 */}}
-{{- define "django-helm.databaseSecretName" -}}
+{{- define "django.databaseSecretName" -}}
 {{- if .Values.postgresql.enabled }}
     {{- if .Values.global.postgresql }}
         {{- if .Values.global.postgresql.auth }}
             {{- if .Values.global.postgresql.auth.existingSecret }}
                 {{- tpl .Values.global.postgresql.auth.existingSecret $ -}}
             {{- else -}}
-                {{- default (include "django-helm.postgresql.fullname" .) (tpl .Values.postgresql.auth.existingSecret $) -}}
+                {{- default (include "django.postgresql.fullname" .) (tpl .Values.postgresql.auth.existingSecret $) -}}
             {{- end -}}
         {{- else -}}
-            {{- default (include "django-helm.postgresql.fullname" .) (tpl .Values.postgresql.auth.existingSecret $) -}}
+            {{- default (include "django.postgresql.fullname" .) (tpl .Values.postgresql.auth.existingSecret $) -}}
         {{- end -}}
     {{- else -}}
-        {{- default (include "django-helm.postgresql.fullname" .) (tpl .Values.postgresql.auth.existingSecret $) -}}
+        {{- default (include "django.postgresql.fullname" .) (tpl .Values.postgresql.auth.existingSecret $) -}}
     {{- end -}}
 {{- else -}}
     {{- default (printf "%s-externaldb" .Release.Name | trunc 63 | trimSuffix "-") (tpl .Values.externalDatabase.existingSecret $) -}}
@@ -100,7 +100,7 @@ Return the PostgreSQL Secret Name
 {{/*
 Add environment variables to configure database values
 */}}
-{{- define "django-helm.databaseSecretPasswordKey" -}}
+{{- define "django.databaseSecretPasswordKey" -}}
 {{- if .Values.postgresql.enabled -}}
     {{- print "password" -}}
 {{- else -}}
@@ -119,7 +119,7 @@ Add environment variables to configure database values
 {{/*
 Add environment variables to configure database values
 */}}
-{{- define "django-helm.databaseSecretPostgresPasswordKey" -}}
+{{- define "django.databaseSecretPostgresPasswordKey" -}}
 {{- if .Values.postgresql.enabled -}}
     {{- print "postgres-password" -}}
 {{- else -}}
@@ -138,21 +138,21 @@ Add environment variables to configure database values
 {{/*
 Odoo credential secret name
 */}}
-{{- define "django-helm.secretName" -}}
+{{- define "django.secretName" -}}
 {{- coalesce .Values.existingSecret (include "common.names.fullname" .) -}}
 {{- end -}}
 
 {{/*
 Return the SMTP Secret Name
 */}}
-{{- define "django-helm.smtpSecretName" -}}
+{{- define "django.smtpSecretName" -}}
 {{- coalesce .Values.smtpExistingSecret (include "common.names.fullname" .) -}}
 {{- end -}}
 
 {{/*
  Create the name of the service account to use
  */}}
-{{- define "django-helm.serviceAccountName" -}}
+{{- define "django.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
     {{ default (include "common.names.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}

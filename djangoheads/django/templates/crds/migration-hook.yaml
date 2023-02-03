@@ -27,7 +27,7 @@ spec:
           value: {{ if typeIs "string" $v }}{{ tpl $v $ | quote }}{{ else }}{{ tpl ($v | toYaml) $ | quote }}{{ end }}
         {{- end }}
         {{- end }}
-        image: {{ template "django-helm.image" . }}
+        image: {{ template "django.image" . }}
         imagePullPolicy: Always
 {{- if .Values.migration }}
         args:

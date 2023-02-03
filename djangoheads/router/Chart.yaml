@@ -2,7 +2,7 @@ apiVersion: v1
 name: router
 version: 1.0.0
 appVersion: 0.0.1
-description: Chart for the router
+description: A default Helm Chart for the Nginx router
 dependencies:
   - name: common
     version: 2.2.1
