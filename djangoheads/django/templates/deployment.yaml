@@ -28,7 +28,7 @@ spec:
       {{- end }}
       annotations:
     spec:
-      {{- include "django-helm.imagePullSecrets" . | indent 6 }}
+      {{- include "django.imagePullSecrets" . | indent 6 }}
       containers:
         - name: {{ include "common.names.fullname" . }}-container
           env:
@@ -38,7 +38,7 @@ spec:
             value: {{ if typeIs "string" $v }}{{ tpl $v $ | quote }}{{ else }}{{ tpl ($v | toYaml) $ | quote }}{{ end }}
           {{- end }}
           {{- end }}
-          image: {{ template "django-helm.image" . }}
+          image: {{ template "django.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- if .Values.command }}
           command:
