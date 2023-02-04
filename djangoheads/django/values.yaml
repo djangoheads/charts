@@ -30,7 +30,7 @@ image:
   ##
   debug: false
 
-config: &config
+config:
   ENV_SWITCHER_FOR_DYNACONF: TOOL_ENV
   DJANGO_SETTINGS_MODULE: service.settings.base
   DJANGO_DATABASES__default__ENGINE: "django.db.backends.postgresql"
