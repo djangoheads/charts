@@ -6,11 +6,12 @@ spec:
   selector:
     matchLabels:
       service: {{ include "common.names.fullname" . }}-deployment
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+  {{- if .Values.updateStrategy }}
+  strategy: {{- toYaml .Values.updateStrategy | nindent 4 }}
+  {{- end }}
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
   template:
     metadata:
       annotations:
@@ -20,14 +21,44 @@ spec:
     spec:
       containers:
         - image: nginx
-          ports:
-            - containerPort: {{ .Values.containerPort }}
           name: {{ include "common.names.fullname" . }}-container
-          resources: { }
+          ports:
+            {{- if .Values.containerPort }}
+            - containerPort: {{ .Values.containerPort }}
+              protocol: TCP
+            {{- end }}
+          {{- if .Values.enableLivenessProbe }}
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customLivenessProbe "context" $) | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled" "path") "context" $) | nindent 12 }}
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: http
+          {{- end }}
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customReadinessProbe "context" $) | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.readinessProbe "enabled" "path") "context" $) | nindent 12 }}
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: http
+          {{- end }}
+          {{- end }}
+          envFrom:
+{{- with .Values.envs }}
+{{ toYaml .| indent 12 }}
+{{- end }}
           volumeMounts:
             - mountPath: /etc/nginx/conf.d
               name: {{ include "common.names.fullname" . }}
+          resources:
+{{ toYaml .Values.resources | trim | indent 12 }}
       restartPolicy: Always
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecrets | quote }}
+{{- end }}
       volumes:
         - name: {{ include "common.names.fullname" . }}
           configMap:
