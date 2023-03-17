@@ -9,7 +9,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Return the proper Odoo image name
+Return the proper Django image name
 */}}
 {{- define "django.image" -}}
 {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
@@ -136,7 +136,7 @@ Add environment variables to configure database values
 {{- end -}}
 
 {{/*
-Odoo credential secret name
+Django credential secret name
 */}}
 {{- define "django.secretName" -}}
 {{- coalesce .Values.existingSecret (include "common.names.fullname" .) -}}

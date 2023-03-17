@@ -30,7 +30,7 @@ image:
   ##
   debug: false
 
-config:
+djangoConfig:
   ENV_SWITCHER_FOR_DYNACONF: TOOL_ENV
   DJANGO_SETTINGS_MODULE: service.settings.base
   DJANGO_DATABASES__default__ENGINE: "django.db.backends.postgresql"
@@ -51,9 +51,26 @@ migrations:
   enabled: true
 serviceAnnotations:
 
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+
+replicaCount: 1
+
 serviceType: LoadBalancer
 servicePort: 8000
 containerPort: 8000
+
+confFile: true
+persistence: true
+
+mountSecretFile:
+  confFile:
+    sourcePath: ""
+    destinationPath: ""
+    content: |-
 
 volumeMounts:
 

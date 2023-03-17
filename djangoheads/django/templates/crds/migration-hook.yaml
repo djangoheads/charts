@@ -21,8 +21,8 @@ spec:
       containers:
       - name: db-migrations
         env:
-        {{- if .Values.config }}
-        {{- range $k, $v := .Values.config }}
+        {{- if .Values.djangoConfig }}
+        {{- range $k, $v := .Values.djangoConfig }}
         - name: {{ $k }}
           value: {{ if typeIs "string" $v }}{{ tpl $v $ | quote }}{{ else }}{{ tpl ($v | toYaml) $ | quote }}{{ end }}
         {{- end }}

@@ -3,9 +3,9 @@ entries:
   django:
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2023-02-03T23:52:25.647612944+06:00"
+    created: "2023-03-14T03:02:58.16696533+06:00"
     description: A default Helm Chart for Django application
-    digest: 4fbcb1ac716213907acb64a49b8ec82e84d4b1f68a2604784a0266c5a22d8d6f
+    digest: 23193ffea8695d8662a3459b35e2e6c98eef7dd4a1cc715d944e374f19ede568
     name: django
     urls:
     - https://djangoheads.github.io/charts/djangoheads/packages/django-1.0.0.tgz
@@ -13,11 +13,11 @@ entries:
   router:
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2023-02-03T23:52:25.648988456+06:00"
+    created: "2023-03-14T03:02:58.167979536+06:00"
     description: A default Helm Chart for the Nginx router
-    digest: 7ffbc2e980619265dec71606a46c56be1f780e7242a0bd69c5e9e7588695e6e0
+    digest: 4bf71966f4444a34e11996f28211f0988c855f5e2059bed909626580c024dd1a
     name: router
     urls:
     - https://djangoheads.github.io/charts/djangoheads/packages/router-1.0.0.tgz
     version: 1.0.0
-generated: "2023-02-03T23:52:25.646243181+06:00"
+generated: "2023-03-14T03:02:58.165741687+06:00"
