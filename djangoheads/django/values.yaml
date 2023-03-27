@@ -84,4 +84,6 @@ autoscaling:
 
 migration: [ "migrate" ]
 
-
+podSecurityContext:
+  enabled: false
+  fsGroup: 1001
