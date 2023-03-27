@@ -30,6 +30,9 @@ spec:
       annotations:
     spec:
       {{- include "django.imagePullSecrets" . | indent 6 }}
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ include "common.names.fullname" . }}-container
           env:
