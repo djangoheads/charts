@@ -48,23 +48,20 @@ djangoConfig:
 # -- Main app values --
 enabled: true
 migrations:
-  enabled: true
+  enabled: false
 serviceAnnotations:
 
 updateStrategy:
   type: RollingUpdate
-  rollingUpdate:
-    maxSurge: 1
-    maxUnavailable: 0
 
 replicaCount: 1
 
 serviceType: LoadBalancer
-servicePort: 8000
-containerPort: 8000
+servicePort:
+containerPort:
 
-confFile: true
-persistence: true
+confFile:
+persistence:
 
 mountSecretFile:
   confFile:
