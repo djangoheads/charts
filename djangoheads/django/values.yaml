@@ -9,9 +9,10 @@ global:
 
 # -- Main api defaults -- #
 image:
+  fullImageName: ""
   registry: ""
   repository: ""
-  tag: 0.0.1
+  tag: ""
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
