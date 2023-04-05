@@ -43,7 +43,7 @@ spec:
             value: {{ if typeIs "string" $v }}{{ tpl $v $ | quote }}{{ else }}{{ tpl ($v | toYaml) $ | quote }}{{ end }}
           {{- end }}
           {{- end }}
-          image: {{ or ( include "django.image" . ) ( index ( lookup "apps/v1" "Deployment" .Release.Namespace (include "common.names.fullname" . ) ).spec.template.spec.containers 0).image }}
+          image: {{ or .Values.image.fullImageName ( index ( lookup "apps/v1" "Deployment" .Release.Namespace (include "common.names.fullname" . ) ).spec.template.spec.containers 0).image }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- if .Values.command }}
           command:
