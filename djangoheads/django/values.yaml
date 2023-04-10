@@ -41,7 +41,6 @@ djangoConfig:
   DJANGO_DATABASES__default__PASSWORD: db_pass
 
   DJANGO_BASE_URL: ""
-  DJANGO_DEBUG: "true"
   DJANGO_SECRET_KEY: local
 
   DJANGO_ENVIRONMENT: development

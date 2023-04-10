@@ -28,7 +28,6 @@ spec:
       {{ toYaml .| indent 2 }}
       {{- end }}
       annotations:
-        previousImg: {{ ( index ( lookup "apps/v1" "Deployment" .Release.Namespace (include "common.names.fullname" . ) ).spec.template.spec.containers 0).image }}
     spec:
       {{- include "django.imagePullSecrets" . | indent 6 }}
       {{- if .Values.podSecurityContext.enabled }}
