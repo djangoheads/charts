@@ -32,18 +32,6 @@ image:
   debug: false
 
 djangoConfig:
-  ENV_SWITCHER_FOR_DYNACONF: TOOL_ENV
-  DJANGO_SETTINGS_MODULE: service.settings.base
-  DJANGO_DATABASES__default__ENGINE: "django.db.backends.postgresql"
-  DJANGO_DATABASES__default__HOST: db_host
-  DJANGO_DATABASES__default__NAME: db_name
-  DJANGO_DATABASES__default__USER: db_user
-  DJANGO_DATABASES__default__PASSWORD: db_pass
-
-  DJANGO_BASE_URL: ""
-  DJANGO_SECRET_KEY: local
-
-  DJANGO_ENVIRONMENT: development
 
 # -- Main app values --
 enabled: true
